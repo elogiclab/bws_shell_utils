@@ -8,15 +8,12 @@ bws_get() {
     case ${opt} in
         k)
         local key_name=${OPTARG}
-        shift 2
         ;;
         e)
         local var_name=${OPTARG}
-        shift 2
         ;;
         o)
         local file_name=${OPTARG}
-        shift 2
         ;;
         ?) 
         >&2 echo "${opt} is not a valid option"
@@ -24,7 +21,6 @@ bws_get() {
     esac
     done
     [[ -z $BWS_ACCESS_TOKEN ]] && >&2 echo "BWS_ACCESS_TOKEN is not set - aborting" && return 1
-    if [[ ! -z $1 ]] && >&2 echo "${1} is not a valid argument" && return 1
    
 
     local result=$(bws secret list | jq -c '.[] | select(.key == "'$key_name'") | .value' -r)
@@ -52,7 +48,6 @@ bws_source() {
     esac
     done    
     [[ -z $BWS_ACCESS_TOKEN ]] && >&2 echo "BWS_ACCESS_TOKEN is not set - aborting" && return 1
-    if [[ ! -z $1 ]] && >&2 echo "${1} is not a valid argument" && return 1
 
     local result=$(bws_get -k $key_name)
     if [[ "$?" != "0" || -z "$result" ]]
