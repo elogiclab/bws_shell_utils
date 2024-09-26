@@ -23,11 +23,9 @@ bws_get() {
         ;;
     esac
     done
-    if [[ ! -z $1 ]]
-    then
-      >&2 echo "${1} is not a valid argument"
-      return 1
-    fi
+    [[ -z $BWS_ACCESS_TOKEN ]] && >&2 echo "BWS_ACCESS_TOKEN is not set - aborting"; return 1
+    if [[ ! -z $1 ]] && >&2 echo "${1} is not a valid argument"; return 1
+   
 
     local result=$(bws secret list | jq -c '.[] | select(.key == "'$key_name'") | .value' -r)
     if [[ "$?" != "0" || -z "$result" ]]
@@ -53,12 +51,8 @@ bws_source() {
         ;;
     esac
     done    
-    if [[ ! -z $1 ]]
-    then
-      >&2 echo "${1} is not a valid argument"
-      return 1
-    fi
-
+    [[ -z $BWS_ACCESS_TOKEN ]] && >&2 echo "BWS_ACCESS_TOKEN is not set - aborting"; return 1
+    if [[ ! -z $1 ]] && >&2 echo "${1} is not a valid argument"; return 1
 
     local result=$(bws_get -k $key_name)
     if [[ "$?" != "0" || -z "$result" ]]
@@ -69,6 +63,7 @@ bws_source() {
 }
 
 bws_add_ssh_keys() {
+    [[ -z $BWS_ACCESS_TOKEN ]] && >&2 echo "BWS_ACCESS_TOKEN is not set - aborting"; return 1
     local keys_to_add=${@:-$BWS_SSH_PRIVATE_KEYS}
     if [[ -z "$keys_to_add" ]]
     then
