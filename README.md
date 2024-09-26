@@ -26,15 +26,15 @@ You can of course source the file immediately to have the functions available on
 ### bws_get
 #### Usage:
 ```
-bws_get <secret_key> [<variable_name>]
+bws_get -k <secret_key> [-e <variable_name>] [-o <file_name>]
 ```
 #### Description:
-Reads the secret corresponding to the key <secret_key>. The value returned is stored into the variable <variable_name> if given, or printed to stdout otherwise. If it is stored in a variable it is also exported.
+Reads the secret corresponding to the key <secret_key>. The value returned is stored into the variable <variable_name> if given, in the file <file_name> if given, or printed to stdout otherwise. When it is stored in a variable it is also exported.
 
 ### bws_source
 #### Usage:
 ```
-bws_source <secret_key>
+bws_source -k <secret_key>
 ```
 #### Description:
 Apply (source) the secret corresponding to the <secret_key> in the current shell. It is intended to receive a list of VARIABLE=VALUE assignments.

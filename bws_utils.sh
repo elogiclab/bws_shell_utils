@@ -3,25 +3,49 @@
 #######################################
 
 bws_get() {
-    local key_name=$1
-    local var_name=$2
+    OPTSTRING="k:o:e:"
+    while getopts ${OPTSTRING} opt; do
+    case ${opt} in
+        k)
+        local key_name=${OPTARG}
+        ;;
+        e)
+        local var_name=${OPTARG}
+        ;;
+        o)
+        local file_name=${OPTARG}
+        ;;
+        *)
+        echo "Invalid option: -${OPTARG}."
+        return 1
+        ;;
+    esac
+    done    
     local result=$(bws secret list | jq -c '.[] | select(.key == "'$key_name'") | .value' -r)
     if [[ "$?" != "0" || -z "$result" ]]
     then
         >&2 echo "Cannot retrieve secret: $key_name"
         return 1
     fi
-    if [[ -z "$var_name" ]]
-    then
-        echo $result
-    else
-        eval "$var_name=$(echo $result); export $var_name"
-    fi
+    [[ ! -z "$var_name" ]] && eval "$var_name=$(echo $result); export $var_name"
+    [[ ! -z "$file_name" ]] && echo $result > $file_name
+    [[ -z "$var_name" && -z "$file_name" ]] && echo $result
 }
 
 bws_source() {
-    local key_name=$1
-    local result=$(bws_get $key_name)
+    OPTSTRING="k:"
+    while getopts ${OPTSTRING} opt; do
+    case ${opt} in
+        k)
+        local key_name=${OPTARG}
+        ;;
+        *)
+        echo "Invalid option: -${OPTARG}."
+        return 1
+        ;;
+    esac
+    done    
+    local result=$(bws_get -k $key_name)
     if [[ "$?" != "0" || -z "$result" ]]
     then
         return 1
@@ -39,7 +63,7 @@ bws_add_ssh_keys() {
     if [[ -z "$@" ]]
     for k in $(echo $keys_to_add)
     do
-        local private_key=$(bws_get $k)
+        local private_key=$(bws_get -k $k)
         if [[ "$?" != "0" || -z "$private_key" ]]
         then
             >&2 echo "Cannot add $z key"
@@ -52,3 +76,4 @@ bws_add_ssh_keys() {
         fi
     done
 }
+
