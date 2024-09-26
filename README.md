@@ -11,7 +11,7 @@ This library of utilities was created to facilitate everyday use and encourage t
 * [Bitwarden Secrets Manager CLI](https://github.com/bitwarden/sdk/releases)
 * [Jq](https://jqlang.github.io/jq/) CLI processor
 
-Also make sure you have a valid token for your computer and the BWS_ACCESS_TOKEN variable set for your shell. 
+Also make sure you have a valid token for your computer and the BWS_ACCESS_TOKEN variable set for your shell before calling the functions.
 
 ## Installation
 Currently only manual installation is available, which is very simple anyway.
