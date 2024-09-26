@@ -8,19 +8,27 @@ bws_get() {
     case ${opt} in
         k)
         local key_name=${OPTARG}
+        shift 2
         ;;
         e)
         local var_name=${OPTARG}
+        shift 2
         ;;
         o)
         local file_name=${OPTARG}
+        shift 2
         ;;
-        *)
-        echo "Invalid option: -${OPTARG}."
-        return 1
+        ?) 
+        >&2 echo "${opt} is not a valid option"
         ;;
     esac
-    done    
+    done
+    if [[ ! -z $1 ]]
+    then
+      >&2 echo "${1} is not a valid argument"
+      return 1
+    fi
+
     local result=$(bws secret list | jq -c '.[] | select(.key == "'$key_name'") | .value' -r)
     if [[ "$?" != "0" || -z "$result" ]]
     then
@@ -45,6 +53,13 @@ bws_source() {
         ;;
     esac
     done    
+    if [[ ! -z $1 ]]
+    then
+      >&2 echo "${1} is not a valid argument"
+      return 1
+    fi
+
+
     local result=$(bws_get -k $key_name)
     if [[ "$?" != "0" || -z "$result" ]]
     then
