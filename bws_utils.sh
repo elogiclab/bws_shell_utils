@@ -4,13 +4,19 @@
 
 bws_get() {
     local key_name=$1
+    local var_name=$2
     local result=$(bws secret list | jq -c '.[] | select(.key == "'$key_name'") | .value' -r)
     if [[ "$?" != "0" || -z "$result" ]]
     then
-        >&2 echo "Cannot retrieve secret"
+        >&2 echo "Cannot retrieve secret: $key_name"
         return 1
     fi
-    echo $result
+    if [[ -z "$var_name" ]]
+    then
+        echo $result
+    else
+        eval "$var_name=$(echo $result); export $var_name"
+    fi
 }
 
 bws_source() {

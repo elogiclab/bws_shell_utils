@@ -11,7 +11,7 @@ This library of utilities was created to facilitate everyday use and encourage t
 * [Bitwarden Secrets Manager CLI](https://github.com/bitwarden/sdk/releases)
 * [Jq](https://jqlang.github.io/jq/) CLI processor
 
-Also make sure you have a valid token for your computer and the BWS_ACCESS_TOKEN variable set for your shell.
+Also make sure you have a valid token for your computer and the BWS_ACCESS_TOKEN variable set for your shell. 
 
 ## Installation
 Currently only manual installation is available, which is very simple anyway.
@@ -26,10 +26,10 @@ You can of course source the file immediately to have the functions available on
 ### bws_get
 #### Usage:
 ```
-bws_get <secret_key>
+bws_get <secret_key> [<variable_name>]
 ```
 #### Description:
-Reads the secret corresponding to the key <secret_key> and prints it to standard output.
+Reads the secret corresponding to the key <secret_key>. The value returned is stored into the variable <variable_name> if given, or printed to stdout otherwise. If it is stored in a variable it is also exported.
 
 ### bws_source
 #### Usage:
@@ -37,12 +37,4 @@ Reads the secret corresponding to the key <secret_key> and prints it to standard
 bws_source <secret_key>
 ```
 #### Description:
-Apply (source) the secret corresponding to the <secret_key> in the current shell. For example, suppose we have a secret identified with the key `my_restic_credentials` like this:
-```
-AWS_ACCESS_KEY_ID=xxxxx
-AWS_SECRET_ACCESS_KEY=dddd
-RESTIC_REPOSITORY=s3:my.s3.bucket.url
-RESTIC_PASSWORD=myPassword
-```
-You can call the command `bws_source my_restic_credentials` before working with restic to manipulate your backups.
-
+Apply (source) the secret corresponding to the <secret_key> in the current shell. It is intended to receive a list of VARIABLE=VALUE assignments.
